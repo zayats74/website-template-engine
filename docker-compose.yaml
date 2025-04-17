@@ -5,8 +5,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -20,7 +20,8 @@ services:
     depends_on:
       - postgres
     environment:
-      - SERVER_PORT=8181
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES}
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_DATASOURCE_URL=${DB_URL}
 volumes:
   postgres_data:
