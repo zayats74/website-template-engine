@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:15.0
+    container_name: 'database'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  app:
+    image: app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES}
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_DATASOURCE_URL=${DB_URL}
+volumes:
+  postgres_data:
