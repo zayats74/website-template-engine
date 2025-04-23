@@ -23,5 +23,32 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES}
       - SERVER_PORT=${SERVER_PORT}
       - SPRING_DATASOURCE_URL=${DB_URL}
+      - MINIO_SERVER_URL=${MINIO_SERVER_URL}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      - MINIO_SECURE=false
+  object-storage:
+    image: bitnami/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000" #api
+      - "9001:9001" #web-console
+    environment:
+      - MINIO_DEFAULT_BUCKETS=${MINIO_BUCKET_NAME}
+      - MINIO_SERVER_URL=${MINIO_SERVER_URL}
+      - MINIO_BROWSER=on
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_SECURE=false
+    volumes:
+      - ./data/minio-persistence:/data
+      - ./data/minio-persistence/certs:/certs
+
 volumes:
   postgres_data:
+  minio_data:
+  minio_certs:
+networks:
+  app-network:
+    driver: bridge
