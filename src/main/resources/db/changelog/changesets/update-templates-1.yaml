@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-template-1
+      author: Zayats Natalia
+      preConditions:
+        - tableExists:
+            tableName: users
+        - tableExists:
+            tableName: templates
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: templates
+            constraintName: fk_template_user
+        - dropColumn:
+            tableName: templates
+            columnName: user_id
+        - addColumn:
+            tableName: templates
+            columns:
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    foreignKeyName: fk_template_user_username
+                    references: users(username)

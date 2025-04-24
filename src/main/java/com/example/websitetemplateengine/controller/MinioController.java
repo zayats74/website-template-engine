@@ -3,6 +3,7 @@ package com.example.websitetemplateengine.controller;
 import com.example.websitetemplateengine.service.MinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,11 +20,11 @@ public class MinioController {
     private final MinioService minioService;
 
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void upload(@RequestParam("file") MultipartFile file) {
         try {
             InputStream in = new ByteArrayInputStream(file.getBytes());
-            String fileName = "all/system/" + file.getOriginalFilename();
+            String fileName = "public/system/" + file.getOriginalFilename();
             minioService.putObject(fileName, in);
             log.info("Uploaded File: " + fileName);
         }

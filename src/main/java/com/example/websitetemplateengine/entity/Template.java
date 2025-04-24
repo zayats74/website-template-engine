@@ -3,7 +3,6 @@ package com.example.websitetemplateengine.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ public class Template {
     @Column(nullable = false)
     private String bucketName;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String key;
 
     @Column(nullable = false)
@@ -40,7 +39,7 @@ public class Template {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username", referencedColumnName = "username")
     private User user;
 
 }

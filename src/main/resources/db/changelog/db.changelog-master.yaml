@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changesets/create-users-table.yaml
   - include:
       file: db/changelog/changesets/create-templates-table.yaml
+  - include:
+      file: db/changelog/changesets/update-templates-1.yaml
