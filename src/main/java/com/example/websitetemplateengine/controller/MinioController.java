@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -26,16 +27,17 @@ public class MinioController {
             InputStream in = new ByteArrayInputStream(file.getBytes());
             String fileName = "public/system/" + file.getOriginalFilename();
             minioService.putObject(fileName, in);
-            log.info("Uploaded File: " + fileName);
+            log.info("Uploaded File: {}", fileName);
         }
-        catch (Exception e){
-            log.error(e.getMessage());
+        catch (IOException e){
+            log.error("Failed to read file: {}", file.getOriginalFilename());
+            throw new RuntimeException("Failed to read file: " + file.getOriginalFilename(), e);
         }
     }
 
     @GetMapping("/download")
     public String download(@RequestParam String file) {
-        log.info("Downloading File: " + file);
+        log.info("Downloading File: {}", file);
         return minioService.getObject(file);
     }
 }

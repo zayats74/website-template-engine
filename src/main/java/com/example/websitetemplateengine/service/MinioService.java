@@ -30,7 +30,8 @@ public class MinioService {
                     .build());
         }
         catch(Exception e){
-            log.error(e.getMessage());
+            log.error("Failed to upload file {}", objectName, e);
+            throw new RuntimeException("Failed to upload file", e);
         }
         finally {
             if (inputStream != null) {
@@ -38,7 +39,7 @@ public class MinioService {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    log.error(e.getMessage());
+                    log.error("Failed to close InputStream", e);
                 }
             }
         }
@@ -48,12 +49,12 @@ public class MinioService {
         try(InputStream stream = minioClient.getObject(GetObjectArgs.builder()
                 .bucket(minioProperties.getBucketName())
                 .object(objectName)
-                .build())){
+                .build())) {
             return new String(stream.readAllBytes());
         }
-        catch (Exception e){
-            log.error(e.getMessage());
+        catch (Exception e) {
+            log.error("Failed to read file {}", objectName, e);
+            throw new RuntimeException("Failed to read file" + objectName, e);
         }
-        return "Storage is empty. Load some files.";
     }
 }
