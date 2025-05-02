@@ -1,33 +1,22 @@
 package com.example.websitetemplateengine.config;
 
 import io.minio.MinioClient;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
+@RequiredArgsConstructor
 public class MinioConfig {
-    @Value("${minio.server.url}")
-    private String minioUrl;
 
-    @Value("${minio.root.user}")
-    private String user;
-
-    @Value("${minio.root.password}")
-    private String password;
-
-    @Value("${minio.bucketName}")
-    private String bucketName;
-
-    @Value("${minio.secure}")
-    private boolean minioSecure;
+    private final MinioProperties minioProperties;
 
     @Bean
     public MinioClient minioClient(){
         return MinioClient.builder()
-                .credentials(user, password)
-                .endpoint(minioUrl, 9000, minioSecure)
+                .credentials(minioProperties.getUser(), minioProperties.getPassword())
+                .endpoint(minioProperties.getMinioUrl(), 9000, minioProperties.isSecure())
                 .build();
     }
 }

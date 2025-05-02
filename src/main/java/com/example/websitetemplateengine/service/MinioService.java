@@ -1,10 +1,10 @@
 package com.example.websitetemplateengine.service;
 
+import com.example.websitetemplateengine.config.MinioProperties;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,17 +15,17 @@ import java.io.InputStream;
 public class MinioService {
 
     private final MinioClient minioClient;
+    private final MinioProperties minioProperties;
 
-    @Value("${minio.bucketName}")
-    private String bucketName;
-
-    public MinioService(MinioClient minioClient) {
+    public MinioService(MinioClient minioClient, MinioProperties minioProperties) {
         this.minioClient = minioClient;
+        this.minioProperties = minioProperties;
     }
+
 
     public void putObject(String objectName, InputStream inputStream) {
         try{
-            minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).
+            minioClient.putObject(PutObjectArgs.builder().bucket(minioProperties.getBucketName()).
                     object(objectName).stream(inputStream, -1, 10485760)
                     .build());
         }
@@ -46,7 +46,7 @@ public class MinioService {
 
     public String getObject(String objectName) {
         try(InputStream stream = minioClient.getObject(GetObjectArgs.builder()
-                .bucket(bucketName)
+                .bucket(minioProperties.getBucketName())
                 .object(objectName)
                 .build())){
             return new String(stream.readAllBytes());

@@ -1,5 +1,6 @@
 package com.example.websitetemplateengine.service;
 
+import com.example.websitetemplateengine.config.MinioProperties;
 import com.example.websitetemplateengine.dto.TemplateRequestDTO;
 import com.example.websitetemplateengine.dto.TemplateResponseDTO;
 import com.example.websitetemplateengine.entity.Template;
@@ -7,7 +8,6 @@ import com.example.websitetemplateengine.entity.User;
 import com.example.websitetemplateengine.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -20,9 +20,8 @@ public class TemplateServiceImpl implements TemplateService {
 
     private final TemplateRepository templateRepository;
     private final MinioService minioService;
+    private final MinioProperties minioProperties;
 
-    @Value("${minio.bucketName}")
-    private String bucketName;
 
     @Override
     public TemplateResponseDTO getTemplate(String path) {
@@ -38,7 +37,7 @@ public class TemplateServiceImpl implements TemplateService {
             minioService.putObject(filepath, in);
             Template t = Template.builder()
                     .name(template.getFile().getOriginalFilename())
-                    .bucketName(bucketName)
+                    .bucketName(minioProperties.getBucketName())
                     .key(filepath)
                     .user(User.builder().username(template.getUsername()).build()) //later fix
                     .build();
