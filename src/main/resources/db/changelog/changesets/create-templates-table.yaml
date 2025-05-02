@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-templates-table
+      author: Zayats Natalia
+      preConditions:
+        - tableExists:
+            tableName: users
+      changes:
+        - createTable:
+            tableName: templates
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(100)
+              - column:
+                  name: bucket_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: datetime
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_template_user
+                    references: public.users(id)
